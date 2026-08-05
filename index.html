@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pythagoras Tree</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;overflow:hidden;background:#000;
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
+  #view{position:fixed;inset:0;display:block}
+  #hud{
+    position:fixed;top:8px;left:50%;transform:translateX(-50%);
+    display:flex;flex-direction:column;align-items:center;
+    z-index:5;pointer-events:none;
+  }
+  #title{
+    font-family:'Segoe Script','Brush Script MT','Snell Roundhand',cursive;
+    font-weight:300;font-style:italic;
+    font-size:clamp(19px,3vw,34px);letter-spacing:1px;
+    transform:skewX(-8deg);
+    background:linear-gradient(90deg,#a8d8ff,#c2a8ff,#ffb4e0,#843ad8);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    user-select:none;margin-bottom:44px;white-space:nowrap;
+  }
+  #panel{
+    pointer-events:auto;
+    width:176px;
+    padding:9px 11px 10px;
+    border-radius:10px;
+    color:#e8e2f7;
+    background:rgba(14,9,28,.55);
+    border:1px solid rgba(194,168,255,.16);
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  }
+  #panel .row{display:flex;align-items:center;justify-content:space-between;
+    gap:8px;margin-top:7px;font-size:10px;letter-spacing:.3px}
+  #panel .row:first-child{margin-top:0}
+  #panel label{opacity:.72;white-space:nowrap}
+  #panel label b{opacity:1;color:#ffb4e0;font-weight:600}
+  input[type=range]{
+    -webkit-appearance:none;appearance:none;
+    width:92px;height:2px;border-radius:2px;outline:none;cursor:pointer;
+    background:linear-gradient(90deg,rgba(168,216,255,.55),rgba(194,168,255,.55));
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:10px;height:10px;border-radius:50%;
+    background:#c2a8ff;box-shadow:0 0 6px rgba(194,168,255,.7);cursor:pointer;
+  }
+  input[type=range]::-moz-range-thumb{
+    width:10px;height:10px;border:none;border-radius:50%;
+    background:#c2a8ff;box-shadow:0 0 6px rgba(194,168,255,.7);cursor:pointer;
+  }
+  .btns{display:flex;gap:6px;margin-top:9px}
+  .btns button{
+    flex:1;padding:5.5px 0;border-radius:999px;border:none;cursor:pointer;
+    font-size:9px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;
+    color:#1c0b33;background:linear-gradient(90deg,#a8d8ff,#c2a8ff,#ffb4e0);
+    transition:transform .15s,box-shadow .15s;
+  }
+  .btns button:hover{transform:translateY(-1px);box-shadow:0 3px 12px rgba(194,168,255,.4)}
+  .btns button:active{transform:scale(.96)}
+  #reset{background:transparent;border:1px solid rgba(194,168,255,.45)!important;
+    color:#c2a8ff!important}
+  #snd{
+    position:fixed;right:14px;bottom:14px;z-index:6;
+    width:38px;height:38px;border-radius:50%;border:1px solid rgba(194,168,255,.35);
+    background:rgba(14,9,28,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    color:#e8e2f7;font-size:16px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    outline:none;-webkit-user-select:none;user-select:none;
+    -webkit-touch-callout:none;
+    transition:transform .15s,box-shadow .15s,background .15s;
+  }
+  #snd:focus,#snd:focus-visible{outline:none;box-shadow:none}
+  #snd:active{transform:scale(.92)}
+  #snd svg{width:18px;height:18px;display:block;pointer-events:none}
+</style>
+</head>
+<body>
+<canvas id="view"></canvas>
+
+<div id="hud">
+  <div id="title">Pythagoras Tree !</div>
+  <div id="panel">
+    <div class="row"><label>Depth <b id="dv">13</b></label>
+      <input id="depth" type="range" min="1" max="15" step="1" value="13"></div>
+    <div class="row"><label>Angle <b id="av">45°</b></label>
+      <input id="angle" type="range" min="25" max="65" step="1" value="45"></div>
+    <div class="row"><label>Speed <b id="sv">0.5×</b></label>
+      <input id="speed" type="range" min="0.1" max="1" step="0.05" value="0.5"></div>
+    <div class="btns">
+      <button id="rand">Randomize</button>
+      <button id="reset">Reset</button>
+    </div>
+  </div>
+</div>
+
+<audio id="bgm" src="music.mp3" loop preload="auto"></audio>
+<button id="snd" aria-label="Toggle sound">
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="sndGrad" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#a8d8ff"/>
+        <stop offset=".38" stop-color="#c2a8ff"/>
+        <stop offset=".68" stop-color="#ffb4e0"/>
+        <stop offset="1" stop-color="#843ad8"/>
+      </linearGradient>
+    </defs>
+    <path id="sndSpeaker" d="M4 9v6h4l5 4V5L8 9H4z" fill="url(#sndGrad)"/>
+    <g id="sndWaves">
+      <path d="M16.2 8.8a5 5 0 010 6.4" stroke="url(#sndGrad)" stroke-width="1.7" stroke-linecap="round" fill="none"/>
+      <path d="M18.6 6.4a8.5 8.5 0 010 11.2" stroke="url(#sndGrad)" stroke-width="1.7" stroke-linecap="round" fill="none"/>
+    </g>
+    <path id="sndMute" d="M16 9l4.5 6M20.5 9L16 15" stroke="url(#sndGrad)" stroke-width="1.7" stroke-linecap="round" style="display:none"/>
+  </svg>
+</button>
+
+<script>
+'use strict';
+/* =====================================================================
+   PYTHAGORAS TREE — square → right triangle → 2 child squares on legs.
+   sL = s·cosθ , sR = s·sinθ  (sL²+sR²=s² → seamless Pythagorean joints)
+   ===================================================================== */
+const view=document.getElementById('view'), mctx=view.getContext('2d');
+const layer=document.createElement('canvas'), tctx=layer.getContext('2d');
+const hud=document.getElementById('hud');
+const HALF_PI=Math.PI/2, MIN_SIZE=0.6;
+let W,H,DPR, s0=200, tx=0, ty=0, grad;
+
+let D=0, targetD=14;
+let theta=HALF_PI/4, targetTheta=HALF_PI/4;
+let speed=0.5, needsDraw=true;
+let cosT=Math.cos(theta), sinT=Math.sin(theta);
+let bbKey='', bb={minX:0,maxX:1,minY:-4,maxY:0,w:1,h:4};
+
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const easeOut=x=>1-Math.pow(1-x,3);
+
+/* ================= responsive fitting ================= */
+function mPoint(m,x,y){
+  const X=m.a*x+m.c*y+m.e, Y=m.b*x+m.d*y+m.f;
+  if(X<bb.minX)bb.minX=X; if(X>bb.maxX)bb.maxX=X;
+  if(Y<bb.minY)bb.minY=Y; if(Y>bb.maxY)bb.maxY=Y;
+}
+function comp(m,a2,b2,c2,d2,e2,f2){
+  return{a:m.a*a2+m.c*b2, b:m.b*a2+m.d*b2,
+         c:m.a*c2+m.c*d2, d:m.b*c2+m.d*d2,
+         e:m.a*e2+m.c*f2+m.e, f:m.b*e2+m.d*f2+m.f};
+}
+function measure(s,d,maxD,m,ct,st){
+  mPoint(m,0,0);mPoint(m,s,0);mPoint(m,0,-s);mPoint(m,s,-s);
+  if(d<maxD&&s>0.002){
+    const sL=s*ct,sR=s*st;
+    measure(sL,d+1,maxD,comp(m,ct,-st,st,ct,0,-s),ct,st);
+    measure(sR,d+1,maxD,comp(m,st,ct,-ct,st,
+      s*ct*ct,-s-s*ct*st),ct,st);
+  }
+}
+function measureTree(useTheta){
+  const maxD=Math.min(15,targetD-1);
+  const ct=Math.cos(useTheta), st=Math.sin(useTheta);
+  bb={minX:1e9,maxX:-1e9,minY:1e9,maxY:-1e9};
+  measure(1,0,maxD,{a:1,b:0,c:0,d:1,e:0,f:0},ct,st);
+  bb.w=bb.maxX-bb.minX; bb.h=bb.maxY-bb.minY;
+}
+function layout(){
+  const padX=Math.max(12,W*.035);
+  const topL=hud.getBoundingClientRect().bottom + clamp(H*.05,36,56);
+  const botL=H-Math.max(14,H*.03);
+  const availW=W-2*padX, availH=botL-topL;
+  let fit=Math.min(availW/bb.w, availH/bb.h);
+  s0=Math.min(fit, Math.min(W,H)*.30);
+  const extra=availH-bb.h*s0;
+  const topOff=extra*.40;
+  tx=W/2-(bb.minX+bb.w/2)*s0;
+  ty=topL+topOff-bb.minY*s0;
+  const g=tctx.createLinearGradient(0,ty+bb.maxY*s0,0,ty+bb.minY*s0);
+  g.addColorStop(0,'#a8d8ff');g.addColorStop(.38,'#c2a8ff');
+  g.addColorStop(.68,'#ffb4e0');g.addColorStop(1,'#843ad8');
+  grad=g;
+}
+
+/* ================= fractal ================= */
+function drawSquare(s){ tctx.fillRect(0,-s,s,s); }
+function drawBranch(s,d,maxD){
+  const k=easeOut(clamp(D-d,0,1));
+  if(k<=0)return;
+  tctx.save();
+  if(k<1)tctx.scale(k,k);
+  drawSquare(s);
+  if(d<maxD&&s>MIN_SIZE){
+    const sL=s*cosT,sR=s*sinT;
+    tctx.save();tctx.translate(0,-s);tctx.rotate(-theta);
+    drawBranch(sL,d+1,maxD);tctx.restore();
+    tctx.save();tctx.translate(s*cosT*cosT,-s-s*cosT*sinT);
+    tctx.rotate(HALF_PI-theta);
+    drawBranch(sR,d+1,maxD);tctx.restore();
+  }
+  tctx.restore();
+}
+function drawTree(){
+  tctx.setTransform(DPR,0,0,DPR,0,0);
+  tctx.clearRect(0,0,W,H);
+  tctx.fillStyle='#fff';
+  tctx.save();tctx.translate(tx,ty);
+  drawBranch(s0,0,Math.min(15,targetD-1));
+  tctx.restore();
+  tctx.globalCompositeOperation='source-in';
+  tctx.fillStyle=grad;tctx.fillRect(0,0,W,H);
+  tctx.globalCompositeOperation='source-over';
+}
+function present(){
+  mctx.setTransform(DPR,0,0,DPR,0,0);
+  mctx.fillStyle='#000';mctx.fillRect(0,0,W,H);
+  mctx.drawImage(layer,0,0,W,H);
+}
+
+/* ================= animation ================= */
+let last=performance.now();
+function animate(now){
+  requestAnimationFrame(animate);
+  const dt=Math.min((now-last)/1000,.05);last=now;
+  let busy=false;
+  if(Math.abs(D-targetD)>1e-4){
+    const st=dt*speed*2.4;
+    D+=clamp(targetD-D,-st,st);
+    if(Math.abs(D-targetD)<1e-4)D=targetD;
+    busy=true;
+  }
+  if(Math.abs(theta-targetTheta)>1e-4){
+    theta+=(targetTheta-theta)*Math.min(1,dt*(1+3*speed));
+    if(Math.abs(theta-targetTheta)<1e-4)theta=targetTheta;
+    busy=true;
+  }
+  // Layout/bbox only depends on the DESTINATION angle+depth, not the live
+  // interpolated theta — so this key stays stable during a transition
+  // instead of recomputing the whole recursive bbox every single frame.
+  const key=targetTheta.toFixed(4)+'_'+Math.min(15,targetD-1);
+  if(key!==bbKey){bbKey=key;measureTree(targetTheta);layout();}
+  if(busy||needsDraw){
+    cosT=Math.cos(theta);sinT=Math.sin(theta);
+    drawTree();present();needsDraw=false;
+  }
+}
+
+/* ================= setup & controls ================= */
+function resize(){
+  DPR=Math.min(devicePixelRatio||1,2);
+  W=innerWidth;H=innerHeight;
+  view.width=W*DPR;view.height=H*DPR;
+  view.style.width=W+'px';view.style.height=H+'px';
+  layer.width=W*DPR;layer.height=H*DPR;
+  bbKey=''; // force one remeasure/layout pass on resize
+  needsDraw=true;
+}
+const dS=document.getElementById('depth'),aS=document.getElementById('angle'),
+      sS=document.getElementById('speed'),dv=document.getElementById('dv'),
+      av=document.getElementById('av'),sv=document.getElementById('sv');
+dS.oninput=()=>{targetD=+dS.value+1;dv.textContent=dS.value;};
+aS.oninput=()=>{targetTheta=+aS.value*Math.PI/180;av.textContent=aS.value+'°';};
+sS.oninput=()=>{speed=+sS.value;sv.textContent=parseFloat(speed.toFixed(2))+'×';};
+document.getElementById('rand').onclick=e=>{
+  const a=Math.round(28+Math.random()*34);
+  aS.value=a;aS.oninput();e.target.blur();
+};
+document.getElementById('reset').onclick=e=>{
+  dS.value=13;aS.value=45;sS.value=0.5;
+  dS.oninput();aS.oninput();sS.oninput();
+  D=0;e.target.blur();
+};
+addEventListener('resize',resize);
+resize();
+bbKey='__init__'; // force first measure on load, using initial targetTheta
+requestAnimationFrame(animate);
+
+/* ================= audio: loop + mobile-safe unlock ================= */
+const bgm=document.getElementById('bgm'), sndBtn=document.getElementById('snd');
+let userMuted=false, unlocked=false;
+
+function tryPlay(){
+  bgm.play().catch(()=>{}); // browser may still refuse; unlock listener retries
+}
+function unlockAudio(){
+  if(unlocked)return;
+  unlocked=true;
+  if(!userMuted)tryPlay();
+  removeEventListener('pointerdown',unlockAudio);
+  removeEventListener('keydown',unlockAudio);
+}
+// Any first tap/click/keypress anywhere on the page unlocks playback —
+// required because browsers block audio.play() before a user gesture.
+addEventListener('pointerdown',unlockAudio,{once:true});
+addEventListener('keydown',unlockAudio,{once:true});
+tryPlay(); // works immediately on desktop browsers that allow it; harmless no-op elsewhere
+
+sndBtn.onclick=()=>{
+  userMuted=!userMuted;
+  bgm.muted=userMuted;
+  document.getElementById('sndWaves').style.display=userMuted?'none':'';
+  document.getElementById('sndMute').style.display=userMuted?'':'none';
+  sndBtn.style.opacity=userMuted?'.55':'1';
+  if(!userMuted && unlocked)tryPlay();
+};
+</script>
+</body>
+</html>
