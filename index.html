@@ -16,12 +16,13 @@
   }
   #title{
     font-family:'Segoe Script','Brush Script MT','Snell Roundhand',cursive;
-    font-weight:300;font-style:italic;
+    font-weight:700;font-style:italic;
     font-size:clamp(19px,3vw,34px);letter-spacing:1px;
     transform:skewX(-8deg);
     background:linear-gradient(90deg,#a8d8ff,#c2a8ff,#ffb4e0,#843ad8);
     -webkit-background-clip:text;background-clip:text;color:transparent;
     user-select:none;margin-bottom:44px;white-space:nowrap;
+    text-shadow:0 0 1px rgba(194,168,255,.35);
   }
   #panel{
     pointer-events:auto;
@@ -84,7 +85,7 @@
   <div id="title">Pythagoras Tree !</div>
   <div id="panel">
     <div class="row"><label>Depth <b id="dv">13</b></label>
-      <input id="depth" type="range" min="1" max="15" step="1" value="13"></div>
+      <input id="depth" type="range" min="1" max="19" step="1" value="13"></div>
     <div class="row"><label>Angle <b id="av">45°</b></label>
       <input id="angle" type="range" min="25" max="65" step="1" value="45"></div>
     <div class="row"><label>Speed <b id="sv">0.5×</b></label>
@@ -125,7 +126,7 @@
 const view=document.getElementById('view'), mctx=view.getContext('2d');
 const layer=document.createElement('canvas'), tctx=layer.getContext('2d');
 const hud=document.getElementById('hud');
-const HALF_PI=Math.PI/2, MIN_SIZE=0.6;
+const HALF_PI=Math.PI/2, MIN_SIZE=0.6, MAX_DEPTH=20;
 let W,H,DPR, s0=200, tx=0, ty=0, grad;
 
 let D=0, targetD=14;
@@ -158,7 +159,7 @@ function measure(s,d,maxD,m,ct,st){
   }
 }
 function measureTree(useTheta){
-  const maxD=Math.min(15,targetD-1);
+  const maxD=Math.min(MAX_DEPTH,targetD-1);
   const ct=Math.cos(useTheta), st=Math.sin(useTheta);
   bb={minX:1e9,maxX:-1e9,minY:1e9,maxY:-1e9};
   measure(1,0,maxD,{a:1,b:0,c:0,d:1,e:0,f:0},ct,st);
@@ -166,13 +167,13 @@ function measureTree(useTheta){
 }
 function layout(){
   const padX=Math.max(12,W*.035);
-  const topL=hud.getBoundingClientRect().bottom + clamp(H*.05,36,56);
+  const topL=hud.getBoundingClientRect().bottom + clamp(H*.025,18,32);
   const botL=H-Math.max(14,H*.03);
   const availW=W-2*padX, availH=botL-topL;
   let fit=Math.min(availW/bb.w, availH/bb.h);
   s0=Math.min(fit, Math.min(W,H)*.30);
   const extra=availH-bb.h*s0;
-  const topOff=extra*.40;
+  const topOff=extra*.12;
   tx=W/2-(bb.minX+bb.w/2)*s0;
   ty=topL+topOff-bb.minY*s0;
   const g=tctx.createLinearGradient(0,ty+bb.maxY*s0,0,ty+bb.minY*s0);
@@ -204,7 +205,7 @@ function drawTree(){
   tctx.clearRect(0,0,W,H);
   tctx.fillStyle='#fff';
   tctx.save();tctx.translate(tx,ty);
-  drawBranch(s0,0,Math.min(15,targetD-1));
+  drawBranch(s0,0,Math.min(MAX_DEPTH,targetD-1));
   tctx.restore();
   tctx.globalCompositeOperation='source-in';
   tctx.fillStyle=grad;tctx.fillRect(0,0,W,H);
@@ -213,6 +214,14 @@ function drawTree(){
 function present(){
   mctx.setTransform(DPR,0,0,DPR,0,0);
   mctx.fillStyle='#000';mctx.fillRect(0,0,W,H);
+  // soft anchor glow under the trunk so the tree doesn't feel like it's floating
+  const gx=tx+bb.minX*s0+(bb.w*s0)/2, gy=ty+bb.maxY*s0;
+  const glowR=Math.max(60,bb.w*s0*.28);
+  const rg=mctx.createRadialGradient(gx,gy,0,gx,gy,glowR);
+  rg.addColorStop(0,'rgba(194,168,255,.16)');
+  rg.addColorStop(1,'rgba(194,168,255,0)');
+  mctx.fillStyle=rg;
+  mctx.beginPath();mctx.ellipse(gx,gy,glowR,glowR*.35,0,0,Math.PI*2);mctx.fill();
   mctx.drawImage(layer,0,0,W,H);
 }
 
@@ -236,7 +245,7 @@ function animate(now){
   // Layout/bbox only depends on the DESTINATION angle+depth, not the live
   // interpolated theta — so this key stays stable during a transition
   // instead of recomputing the whole recursive bbox every single frame.
-  const key=targetTheta.toFixed(4)+'_'+Math.min(15,targetD-1);
+  const key=targetTheta.toFixed(4)+'_'+Math.min(MAX_DEPTH,targetD-1);
   if(key!==bbKey){bbKey=key;measureTree(targetTheta);layout();}
   if(busy||needsDraw){
     cosT=Math.cos(theta);sinT=Math.sin(theta);
