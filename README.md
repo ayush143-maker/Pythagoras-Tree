@@ -4,11 +4,11 @@ An interactive fractal visualiser based on the Pythagoras tree. Controls let vis
 
 ## Open locally
 
-Open `index.html` in a modern browser, or serve it locally:
+Open `index.html` in a modern browser. Alternatively, from the project root, start a local server:
 
     python -m http.server 8000
 
-Visit http://localhost:8000.
+Then visit http://localhost:8000.
 
 ## Experiment with the controls
 
