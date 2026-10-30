@@ -15,3 +15,5 @@ Then visit <http://localhost:8000>. After changing the visualiser, try the contr
 ## Editing the experience
 
 The visualiser is in the root-level `index.html`. The repository also includes the root-level audio file `music.mp3`; retain its relative path if replacing the file. No deployment provider or configuration is documented.
+
+For content or appearance changes, inspect the existing markup, styles, and scripts in `index.html` first; no separate theme or stylesheet file is listed. If adjusting the visualiser's appearance, make the change in the existing implementation rather than assuming a separate theme configuration. Keep `music.mp3` beside `index.html` while its current relative reference is in use, or update that reference if the file is moved or renamed. Recheck the controls, reset, and audio in a browser.
