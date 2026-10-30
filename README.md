@@ -26,3 +26,14 @@ These are actions to perform after a change, not verified results:
 - Try the recursion-depth, angle, animation-speed, and randomisation controls. Then use reset and check that the visualiser returns to its reset state.
 - Check that `music.mp3` and any other changed image or media references resolve from the paths used in `index.html`. Review the audio behavior if you changed its file or reference.
 - Inspect the visualiser and its controls at narrow mobile-sized and wide desktop-sized viewports. Check that the drawing remains visible and that controls can be reached without clipping or overlap.
+
+## Accessibility review checklist
+
+These are future checks to perform after a change; they are not claims that the page has been tested or found accessible:
+
+- Use the keyboard to reach and operate recursion-depth, angle, animation-speed, randomisation, and reset controls. Check that focus order follows the visual and reading order and that every action is possible without a pointer.
+- Check that each control has a meaningful accessible name, and that value changes can be understood without relying on the drawing alone. Check that keyboard focus remains visible while the tree changes.
+- Review text, control, and focus-indicator contrast. If the tree's colors distinguish branches or states, check that the distinction is also available without color alone.
+- Check whether the fractal drawing has a text alternative or explanation that conveys its relevant content. If images are added, provide appropriate alternatives for informative images and avoid redundant alternatives for decorative ones.
+- Review the animation-speed control and any other motion for a way to pause or reduce movement. Check behavior with reduced motion requested and whether the visualiser remains usable without animation.
+- If `music.mp3` is played by the page, check that audio controls are keyboard reachable and meaningfully named, and that sound is not the only way to understand a state or action.
