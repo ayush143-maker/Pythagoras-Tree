@@ -12,4 +12,4 @@ Then visit http://localhost:8000.
 
 ## Editing the experience
 
-The repository also includes `music.mp3`; retain its relative path if replacing the file.
+The visualiser is in the root-level `index.html`. The repository also includes the root-level audio file `music.mp3`; retain its relative path if replacing the file.
