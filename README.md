@@ -18,6 +18,16 @@ The visualiser is in the root-level `index.html`; `music.mp3` is also in the pro
 
 Review the existing markup, styles, and scripts in `index.html` before editing. The supplied files do not list a separate stylesheet or theme configuration.
 
+## Deployment-readiness checklist
+
+The supplied project files identify a root-level `index.html` and `music.mp3`; they do not document a publishing method or deployment configuration. The items below are recommendations to check for the publishing method you choose, not verified deployment results.
+
+- [ ] Confirm the publishing setup serves the directory containing `index.html` as the site root, or configure its output/root directory so the published page is available at the intended address. Do not assume a build step or generated output directory that is not present in this project.
+- [ ] Ensure `music.mp3` is included alongside `index.html` if the page still refers to it with its current relative path. Check the reference in `index.html` if either file is moved or renamed.
+- [ ] Review the page and its references for local-only paths, machine-specific values, or configuration that should not be published. The supplied project files do not document deployment-specific settings.
+- [ ] After publishing, open the actual published page in a browser. Check that the page loads, the visualiser and its controls work, and the audio file loads if the page uses it. Check the browser Console and Network panel for errors or failed requests.
+- [ ] Repeat the preview at narrow and wide viewports and with keyboard navigation; check for clipping, overlap, visible focus, and accessible control names.
+
 ## Contributor handoff
 
 Keep each change focused on the visualiser or the specific issue being addressed. Preserve existing filenames and relative references unless a change requires updating them, and update every affected reference when moving or renaming a file. In your handoff, describe what changed and which files were affected.
