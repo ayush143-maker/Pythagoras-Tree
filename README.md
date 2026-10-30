@@ -24,8 +24,18 @@ These are actions to perform after a change, not verified results:
 
 - Open `index.html` or the local server URL and inspect the visualiser.
 - Try the recursion-depth, angle, animation-speed, and randomisation controls. Then use reset and check that the visualiser returns to its reset state.
-- Check that `music.mp3` and any other changed image or media references resolve from the paths used in `index.html`. Review the audio behavior if you changed its file or reference.
 - Inspect the visualiser and its controls at narrow mobile-sized and wide desktop-sized viewports. Check that the drawing remains visible and that controls can be reached without clipping or overlap.
+
+## Asset and loading review checklist
+
+These are review steps, not measured performance results or claims that assets have been checked:
+
+- Check the `music.mp3` reference in `index.html` against the file beside it. If the file moves or is renamed, update the reference and review the audio behavior.
+- Search `index.html` for local image, audio, font, and other media references. Verify each path against the intended local file; the supplied root-file list identifies `music.mp3` but does not enumerate references within the page.
+- Review the audio file size and any referenced image dimensions and file sizes. Consider whether large media can be reduced without losing needed quality; no sizes have been measured here.
+- Before removing a local file, check whether the page still references it. Keep the active asset set limited to resources the visualiser uses, while retaining any source files that are intentionally part of the project.
+- No external font or script links are listed in the supplied link information. Inspect `index.html` before concluding there are none, and verify that any external dependency found or added is intentional and has suitable fallback behavior.
+- After asset changes, review the visualiser and its controls, including behavior if an audio or other referenced resource cannot load.
 
 ## Accessibility review checklist
 
