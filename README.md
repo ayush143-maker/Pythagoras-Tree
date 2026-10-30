@@ -4,7 +4,7 @@ An interactive fractal visualiser based on the Pythagoras tree. Use the controls
 
 ## Open locally
 
-Open `index.html` in a modern browser. Alternatively, from the project root, start a local server:
+Open `index.html` in a browser. Alternatively, from the project root, start a local server:
 
     python -m http.server 8000
 
