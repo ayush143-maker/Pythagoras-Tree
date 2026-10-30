@@ -8,8 +8,8 @@ Open `index.html` in a browser. Alternatively, from the project root, start a lo
 
     python -m http.server 8000
 
-Then visit http://localhost:8000. After changing the visualiser, try the controls and reset to review the result.
+Then visit http://localhost:8000. After changing the visualiser, try the controls and reset to review the result. If the accompanying audio is unavailable, check that `music.mp3` remains at the referenced relative path.
 
 ## Editing the experience
 
-The visualiser is in the root-level `index.html`. The repository also includes the root-level audio file `music.mp3`; retain its relative path if replacing the file.
+The visualiser is in the root-level `index.html`. The repository also includes the root-level audio file `music.mp3`; retain its relative path if replacing the file. No deployment provider or configuration is documented.
