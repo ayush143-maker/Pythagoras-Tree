@@ -48,3 +48,8 @@ No browser compatibility or performance results are reported here.
 
 - Open `index.html` from the published location and confirm the page loads as expected.
 - Review the published result once on a narrow screen and once on a wider screen; treat this as a release check, not an automated test report.
+
+## Repository map
+
+- `index.html` — HTML page entry point.
+- `music.mp3` — audio asset.
