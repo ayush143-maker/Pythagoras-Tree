@@ -43,3 +43,8 @@ Before publishing, manually review the changed page in a browser. The checklist 
 - Check the browser Console and Network panel for errors or failed requests, and confirm that local file paths still match after edits.
 
 No browser compatibility or performance results are reported here.
+
+## Final release review
+
+- Open `index.html` from the published location and confirm the page loads as expected.
+- Review the published result once on a narrow screen and once on a wider screen; treat this as a release check, not an automated test report.
