@@ -1,19 +1,15 @@
 # Pythagoras-Tree
 
-An interactive Pythagoras-tree fractal visualizer with controls for recursion depth, angle, animation speed, randomization, and reset.
+Pythagoras-Tree is an interactive fractal visualiser based on the Pythagoras tree. It lets visitors explore how the branching pattern changes through controls for recursion depth, angle, animation speed, randomisation, and reset.
 
-## Run locally
+## Open locally
 
-Open index.html in a modern browser. If browser restrictions block local assets or APIs, serve the folder over HTTP.
+The project is delivered as a standalone HTML page. Open index.html in a modern browser, or serve it locally:
 
-## Structure and assets
+    python -m http.server 8000
 
-`index.html` is the primary entry point. Keep linked images, audio, scripts, and styles in their existing relative locations; renaming files may break references.
+Visit http://localhost:8000 to explore the visualiser.
 
-## Preview and deployment
+## Experiment with the controls
 
-Open the page in a modern browser. If local-file behavior is restricted, start a simple HTTP server from this folder and open the local address in your browser. For static hosting, publish the correct root folder and check asset paths after deployment.
-
-## Making changes
-
-Test the page after edits and check both phone-sized and desktop-sized viewports. Confirm that buttons and other visible interactions work in the deployed version as well as locally.
+Try changing one parameter at a time to see how it affects the shape of the tree. When updating the drawing logic, keep the controls responsive and provide a reliable reset path so the visitor can return to a known starting state. The repository also includes music.mp3 as a local asset; preserve its relative path if you replace it.
