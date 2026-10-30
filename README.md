@@ -16,22 +16,29 @@ Then visit <http://localhost:8000>.
 
 The visualiser is in the root-level `index.html`. The repository also includes the root-level audio file `music.mp3`; retain its relative path if replacing the file. No deployment provider or configuration is documented.
 
-For content or appearance changes, inspect the existing markup, styles, and scripts in `index.html` first; no separate theme or stylesheet file is listed. If adjusting the visualiser's appearance, make the change in the existing implementation rather than assuming a separate theme configuration. Keep `music.mp3` beside `index.html` while its current relative reference is in use, or update that reference if the file is moved or renamed.
+For content or appearance changes, inspect the existing markup, styles, and scripts in `index.html` first; no separate theme or stylesheet file is listed. Make visual changes in the existing implementation rather than assuming a separate theme configuration. Keep `music.mp3` beside `index.html` while its current relative reference is in use, or update that reference if the file is moved or renamed.
 
 ## Manual review checklist
 
 These are actions to perform after a change, not verified results:
 
 - Open `index.html` or the local server URL and inspect the visualiser.
-- Try the recursion-depth, angle, animation-speed, and randomisation controls. Then use reset and check that the visualiser returns to its reset state.
-- Inspect the visualiser and its controls at narrow mobile-sized and wide desktop-sized viewports. Check that the drawing remains visible and that controls can be reached without clipping or overlap.
+- Try the recursion-depth, angle, animation-speed, and randomisation controls. Use reset and check whether the visualiser returns to its reset state.
+
+## Browser and platform reliability checklist
+
+These are checks to perform; no browser compatibility testing or results are reported here:
+
+- Review the experience in current browsers relevant to the intended audience. Check the tree, controls, and any audio behavior in each browser rather than assuming that one browser's behavior applies to others.
+- Open the browser developer tools and inspect the console for errors and warnings, and the network panel for failed or unexpectedly redirected requests.
+- Check that `music.mp3` and any other local resources referenced in `index.html` resolve from the page's location. If the page references remote resources, confirm their requests succeed and that the visualiser remains understandable if a remote resource is unavailable.
+- Compare narrow mobile-sized and wide desktop-sized viewports. Check that the drawing stays visible and controls remain reachable without clipping or overlap.
 
 ## Asset and loading review checklist
 
 These are review steps, not measured performance results or claims that assets have been checked:
 
-- Check the `music.mp3` reference in `index.html` against the file beside it. If the file moves or is renamed, update the reference and review the audio behavior.
-- Search `index.html` for local image, audio, font, and other media references. Verify each path against the intended local file; the supplied root-file list identifies `music.mp3` but does not enumerate references within the page.
+- Search `index.html` for local image, audio, font, and other media references. Verify each path against the intended file; the supplied root-file list identifies `music.mp3` but does not enumerate references within the page.
 - Review the audio file size and any referenced image dimensions and file sizes. Consider whether large media can be reduced without losing needed quality; no sizes have been measured here.
 - Before removing a local file, check whether the page still references it. Keep the active asset set limited to resources the visualiser uses, while retaining any source files that are intentionally part of the project.
 - No external font or script links are listed in the supplied link information. Inspect `index.html` before concluding there are none, and verify that any external dependency found or added is intentional and has suitable fallback behavior.
