@@ -1,6 +1,6 @@
 # Pythagoras-Tree
 
-An interactive fractal visualiser based on the Pythagoras tree. Controls let visitors explore recursion depth, angle, animation speed, randomisation, and reset.
+An interactive fractal visualiser based on the Pythagoras tree. Use the controls to explore recursion depth, angle, animation speed, and randomisation; the reset control restores the visualiser.
 
 ## Open locally
 
@@ -10,6 +10,6 @@ Open `index.html` in a modern browser. Alternatively, from the project root, sta
 
 Then visit http://localhost:8000.
 
-## Experiment with the controls
+## Editing the experience
 
-Change one parameter at a time to see its effect on the tree. Keep the controls responsive and preserve a reliable reset path. The repository also includes `music.mp3`; retain its relative path if replacing the file.
+The repository also includes `music.mp3`; retain its relative path if replacing the file.
