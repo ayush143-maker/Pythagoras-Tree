@@ -8,7 +8,7 @@ Open `index.html` in a modern browser. Alternatively, from the project root, sta
 
     python -m http.server 8000
 
-Then visit http://localhost:8000.
+Then visit http://localhost:8000. After changing the visualiser, try the controls and reset to review the result.
 
 ## Editing the experience
 
